@@ -1,0 +1,40 @@
+<p id="notice"><%= notice %></p>
+
+<!-- Blog Entries Column -->
+  <div class="col-md-12">
+　　　<h1 class="my-4">投稿一覧</h1>
+
+    <% @photos.each do |photo| %>
+    <div class="card mb-12">
+       <br>
+        <center><%= image_tag photo.image.to_s %></center>
+       <br>
+        <ul><%= photo.caption %></ul>
+        <ul><%= photo.user.name %></ul>
+        <ul><button type="button" class="btn btn-default"><%= link_to 'Show', photo %></button></ul>
+
+        <% if current_user && current_user.id == photo.user.id %>
+          <ul><button type="button" class="btn btn-default"><%= link_to 'Edit', edit_photo_path(photo) %></button></ul>
+          <ul><button type="button" class="btn btn-default"><%= link_to 'Destroy', photo, method: :delete, data: { confirm: 'Are you sure?' } %></button></ul>
+        <% end %>
+
+        <% if user_signed_in? %>
+          <% if photo.favorited_by?(current_user) %> <!-- ログインしているユーザーがファボしたかどうかで分岐 -->
+            <ul><span>お気に入り解除: </span><%=link_to photo.favorites.count, photo_favorites_path(photo.id), method: :delete %></ul>
+          <% else %>
+            <ul><span>お気に入り登録: </span><%=link_to photo.favorites.count, photo_favorites_path(photo.id), method: :post %></ul>
+          <% end %>
+        <% end %>
+
+        <ul><span>お気に入り数: </span><%= photo.favorites.count %></ul>
+     <% end %>
+     </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript -->
+<script src="vendor/jquery/jquery.min.js"></script>
+<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<br>
+
+<%= link_to 'New Photo', new_photo_path %>
